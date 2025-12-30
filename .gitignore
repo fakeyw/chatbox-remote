@@ -175,3 +175,7 @@ electron-builder.env
 **/routeTree.gen.ts
 
 .env.sentry-build-plugin
+
+*/.ipynb_checkpoints/*
+
+*/pb_data/*

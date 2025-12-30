@@ -1,3 +1,22 @@
+此仓库仅仅是 chatbox 的一个后端存储实现 + docker 部署示例，**不保证持续更新！！！**
+
+This repo is just a backend implementation + Docker demo for Chatbox. **No guarantee of ongoing updates!**
+
+此仓库实现了 chatbox web 模式下的**远端 pocketbase 存储**，原项目是没有这个功能的，多设备切换太麻烦所以做了适配。
+
+This repo adds **remote PocketBase support** to Chatbox (web). The original version didn't support this, so I built this adapter to solve the hassle of syncing data across multiple devices.
+
+在 `/deploy` 目录给出了部署示例，构建完成的镜像极小，仅 50+ MB。
+
+You'll find deployment examples in `/deploy`. The resulting image is tiny—only 50+ MB.
+
+> 我不确定 chatbox 项目本身是否希望自己有这样的功能，所以不会主动发起 pull request，随缘更新。
+>
+> I'm not sure if the Chatbox team intends to have this feature, so I won't be submitting a Pull Request for now. Updates will be made as I see fit.
+
+
+---
+
 <p align="right">
   <a href="README.md">English</a> |
   <a href="./doc/README-CN.md">简体中文</a>

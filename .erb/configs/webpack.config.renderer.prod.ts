@@ -132,6 +132,7 @@ const configuration: webpack.Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
+      POCKBASE_ADDR: null,
     }),
 
     TanStackRouterWebpack({

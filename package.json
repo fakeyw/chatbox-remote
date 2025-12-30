@@ -284,10 +284,11 @@
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4",
     "zod": "^4.0.17",
-    "zustand": "^5.0.6"
+    "zustand": "^5.0.6",
+    "pocketbase": "^0.21.3"
   },
   "browserslist": [],
-  "electronmon": {
+ "electronmon": {
     "patterns": [
       "!**/**",
       "src/main/**"
