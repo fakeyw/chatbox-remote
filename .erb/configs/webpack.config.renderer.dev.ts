@@ -156,6 +156,7 @@ const configuration: webpack.Configuration = {
      */
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
+      POCKBASE_ADDR: null,
     }),
 
     new webpack.LoaderOptionsPlugin({
