@@ -176,6 +176,6 @@ electron-builder.env
 
 .env.sentry-build-plugin
 
-*/.ipynb_checkpoints/*
+**/.ipynb_checkpoints/*
 
 */pb_data/*

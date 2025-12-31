@@ -1,1 +1,3 @@
 deploy
+!deploy/pb_hooks
+!deploy/login.html

@@ -6,13 +6,20 @@ services:
     build:
       context: ../
       dockerfile: deploy/Dockerfile
-      args:
-        - POCKBASE_ADDR=https://chat.my.dev # <- change this to your domain or ip, chatbox and pocketbase sharing the same address
+      # args:
+      #   - POCKBASE_ADDR=https://chat.my.dev
     restart: always
+    environment:
+      - ACCESS_SECRET=thisShouldBePasswd
     volumes:
       - ./pb_data:/pb_data
+      - ./pb_hooks:/pb_hooks
     ports:
       - "8090:8090"
-    entrypoint: /bin/sh -c
-    command: >
-      "/usr/local/bin/pocketbase serve --http='0.0.0.0:8090' --dir='/pb_data' --publicDir='/pb_public'"
+    entrypoint: 
+      - /usr/local/bin/pocketbase
+      - serve
+      - --http=0.0.0.0:8090
+      - --dir=/pb_data
+      - --publicDir=/pb_public
+      - --hooksDir=/pb_hooks

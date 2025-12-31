@@ -1,4 +1,8 @@
-此仓库仅仅是 chatbox 的一个后端存储实现 + docker 部署示例，**不保证持续更新！！！**
+### Introduce (for this fork)
+
+### Brief
+
+此仓库仅仅是 chatbox 的一个后端存储实现 + docker 部署示例，**不保证持续更新！**
 
 This repo is just a backend implementation + Docker demo for Chatbox. **No guarantee of ongoing updates!**
 
@@ -10,10 +14,78 @@ This repo adds **remote PocketBase support** to Chatbox (web). The original vers
 
 You'll find deployment examples in `/deploy`. The resulting image is tiny—only 50+ MB.
 
-> 我不确定 chatbox 项目本身是否希望自己有这样的功能，所以不会主动发起 pull request，随缘更新。
+> 我不确定 chatbox 项目本身是否希望自己有这样的功能，所以不会主动发起 PR，随缘更新，有重要特性时可以点个星星催更🤣。
 >
-> I'm not sure if the Chatbox team intends to have this feature, so I won't be submitting a Pull Request for now. Updates will be made as I see fit.
+> I'm not sure if the Chatbox team intends to have this feature, so I won't be submitting a Pull Request for now. Updates will be made as I see fit. If there's an important feature, give a star to urge an update 🤣.
 
+
+### Feature
+
+> [!NOTE]
+> Only in web deploy mode.
+
+1. **云端同步 / Cloud Synchronizatio**：基于 PocketBase 实现了 Chatbox 的标准存储接口，多设备同步配置和记录。Implements the standard Chatbox storage interface based on PocketBase, enabling multi-device synchronization of configurations and chat history.
+2. **简易认证 / Simplified Authentication**：自带登录页，登录后才能访问静态资源；前端和存储之间有鉴权保护，只要密码没泄露就基本保证安全。Includes a built-in login page to restrict access to static resources. Authentication protection between the frontend and storage ensures security provided the password remains confidential.
+3. **All-in-One Docker**：单容器一键部署，Docker 镜像包含了 PocketBase 二进制文件和编译后的 Chatbox 前端静态资源。Supports one-click deployment via a single container. The Docker image integrates the PocketBase binary along with the compiled Chatbox frontend static assets.
+4. **零配置启动 / Zero-Configuration Startup**：通过 PocketBase pb_hook 机制自动创建数据库表和系统用户，免手工配置。Utilizes the PocketBase `pb_hook` mechanism to automatically initialize database tables and system users, eliminating the need for manual setup.
+
+### Architecture
+
+```mermaid
+graph TD
+    subgraph Client [Client Side]
+        Browser["Browser / Chatbox SPA"]
+        Cookie["Cookie: pb_auth_access"]
+    end
+
+    subgraph Infrastructure [Server Infrastructure]
+        Nginx["Nginx (Reverse Proxy)"]
+        
+        subgraph PocketBaseContainer ["PocketBase (Port 8090)"]
+            HookLogic{"pb_hooks<br/>(Route Hijacker)"}
+            
+            subgraph StaticFiles ["Static Assets /pb_public"]
+                LoginHTML["login.html<br/>(Login Page)"]
+                DashHTML["dash.html<br/>(App Core)"]
+                Assets["JS/CSS/Images"]
+            end
+            
+            subgraph DataLayer [Data Layer]
+                AuthDB[("User Auth")]
+                StorageDB[("Storage Collection")]
+            end
+        end
+    end
+
+    %% Flow Lines
+    Browser -->|1. HTTPS Request| Nginx
+    Nginx -->|2. Proxy Pass| HookLogic
+
+    %% Static File Serving Logic
+    HookLogic --"Check Cookie (Missing/Invalid)"--> LoginHTML
+    HookLogic --"Check Cookie (Valid)"--> DashHTML
+    LoginHTML -.->|Return HTML| Browser
+    DashHTML -.->|Return HTML| Browser
+
+    %% API Interaction
+    Browser --"3. POST /api/chatbox-auth"--> HookLogic
+    HookLogic -->|"Verify ACCESS_SECRET"| AuthDB
+    
+    %% Data Sync Logic
+    Browser --"4. Init PocketBaseStorage"--> StorageDB
+    StorageDB <-->|"JSON Sync (Get/Set)"| Browser
+
+    %% Styling
+    style PocketBaseContainer fill:#e1f5fe,stroke:#01579b
+    style HookLogic fill:#ffecb3,stroke:#ff6f00
+    style StorageDB fill:#dcedc8,stroke:#33691e
+```
+
+
+---
+**Fork Introduce end.**
+
+**The following content is from the original repository's README.**
 
 ---
 
