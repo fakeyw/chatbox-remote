@@ -84,13 +84,17 @@ const handleIndex = (e) => {
         let hasAuth = false;
         try {
             const cookie = e.request.cookie("pb_auth_access");
-            const val = cookie.Value || cookie.value; 
+            const token = cookie.value; 
             
-            if (val) {
-                hasAuth = true;
+            if (token) {
+                const user = $app.findAuthRecordByToken(token, "auth");
+                if (user) {
+                    hasAuth = true;
+                }
             }
         } catch (err) {
-            console.log("No auth cookie found.");
+            console.log("Auth token invalid or expired:", err.message);
+            e.response.header().set("Set-Cookie", "pb_auth_access=; Path=/; Max-Age=0; HttpOnly");
         }
 
         let targetFile = "pb_public/login.html"; 
@@ -158,12 +162,12 @@ routerAdd("POST", "/api/chatbox-auth", (c) => {
 
         c.setCookie({
             name: "pb_auth_access", 
-            value: "true", 
+            value: token,
             path: "/", 
             secure: true, 
             httpOnly: true, 
             sameSite: "Lax", 
-            maxAge: 2592000
+            maxAge: 60
         });
 
         return c.json(200, { token: token, user: botUser });
